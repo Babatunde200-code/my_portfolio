@@ -161,12 +161,12 @@ const HmiSimulator = () => {
     const width = canvas.width;
     const height = canvas.height;
 
-    // Clear Canvas
-    ctx.fillStyle = "#0b0f16";
+    // Clear Canvas - Pure White for light mode HMI
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
 
-    // Draw Grid Lines
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    // Draw Grid Lines (light gray for light mode)
+    ctx.strokeStyle = "#f1f5f9";
     ctx.lineWidth = 1;
     for (let y = 20; y < height; y += 30) {
       ctx.beginPath();
@@ -188,8 +188,8 @@ const HmiSimulator = () => {
       return height - margin - (val / 100) * range;
     };
 
-    // Draw Setpoint (SP) Line - Dashed Cyan
-    ctx.strokeStyle = "#00f2fe";
+    // Draw Setpoint (SP) Line - Dashed Steel Blue
+    ctx.strokeStyle = "#0284c7";
     ctx.setLineDash([4, 4]);
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -201,13 +201,13 @@ const HmiSimulator = () => {
     });
     ctx.stroke();
 
-    // Draw Process Variable (PV) Line - Solid Green
+    // Draw Process Variable (PV) Line - Solid Emerald Green
     ctx.strokeStyle = "#10b981";
     ctx.setLineDash([]);
     ctx.lineWidth = 2.5;
     ctx.beginPath();
     
-    // Fill Area under PV (gradient)
+    // Fill Area under PV (light gradient)
     const areaPoints = [];
     trendData.current.forEach((pt, idx) => {
       const x = (idx / 39) * width;
@@ -226,7 +226,7 @@ const HmiSimulator = () => {
       ctx.lineTo(areaPoints[areaPoints.length - 1].x, height);
       ctx.closePath();
       const grad = ctx.createLinearGradient(0, 0, 0, height);
-      grad.addColorStop(0, "rgba(16, 185, 129, 0.2)");
+      grad.addColorStop(0, "rgba(16, 185, 129, 0.08)");
       grad.addColorStop(1, "rgba(16, 185, 129, 0)");
       ctx.fillStyle = grad;
       ctx.fill();
@@ -239,68 +239,68 @@ const HmiSimulator = () => {
   }, []);
 
   return (
-    <section id="simulator" className="py-20 px-6 bg-[#07090e] border-t border-b border-gray-900 scroll-mt-14">
+    <section id="simulator" className="py-20 px-6 bg-[#f8fafc] border-t border-b border-slate-200 scroll-mt-14">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-mono font-bold mb-3 text-center flex items-center justify-center gap-3">
-          <span className="text-[#00f2fe]">[02]</span>
+        <h2 className="text-3xl font-mono font-bold mb-3 text-center flex items-center justify-center gap-3 text-slate-800">
+          <span className="text-[#0284c7]">[02]</span>
           <span>HMI_CONTROL_CONSOLE</span>
-          <span className="w-1/4 h-[1px] bg-gradient-to-r from-gray-800 to-transparent"></span>
+          <span className="w-1/4 h-[1px] bg-gradient-to-r from-slate-200 to-transparent"></span>
         </h2>
-        <p className="text-gray-400 text-sm font-sans text-center mb-10 max-w-2xl mx-auto">
+        <p className="text-slate-500 text-sm font-sans text-center mb-10 max-w-2xl mx-auto">
           An interactive, physics-based simulator of an industrial Tank Level Controller. Toggle inputs, tune settings, activate alarms, and observe the live PLC program execution.
         </p>
 
         {/* HMI Main Board Grid */}
-        <div className="grid lg:grid-cols-12 gap-6 bg-[#0f131a] border border-gray-800 rounded-xl p-6 shadow-2xl relative overflow-hidden scada-grid">
+        <div className="grid lg:grid-cols-12 gap-6 bg-white border border-slate-200 rounded-xl p-6 shadow-md relative overflow-hidden scada-grid">
           {/* Status Bar */}
-          <div className="col-span-12 border-b border-gray-800 pb-4 flex flex-wrap justify-between items-center gap-4">
+          <div className="col-span-12 border-b border-slate-200 pb-4 flex flex-wrap justify-between items-center gap-4">
             <div className="flex items-center space-x-4">
-              <span className="text-xs font-mono text-gray-500 font-bold uppercase tracking-wider">HMI PROCESS Mimic:</span>
+              <span className="text-xs font-mono text-slate-400 font-bold uppercase tracking-wider">HMI PROCESS Mimic:</span>
               <div className="flex items-center space-x-2">
-                <span className={`w-3.5 h-3.5 rounded-full ${systemActive ? "bg-emerald-500 led-blink-green" : "bg-red-500/30 border border-red-500"}`}></span>
-                <span className={`text-xs font-mono font-bold ${systemActive ? "text-emerald-400" : "text-red-500"}`}>
+                <span className={`w-3.5 h-3.5 rounded-full ${systemActive ? "bg-emerald-500 led-blink-green" : "bg-red-400/30 border border-red-400"}`}></span>
+                <span className={`text-xs font-mono font-bold ${systemActive ? "text-emerald-600" : "text-red-500"}`}>
                   {systemActive ? "PROCESS_ACTIVE" : "PROCESS_STOPPED"}
                 </span>
               </div>
               {safetyTrip && (
-                <div className="flex items-center space-x-2 bg-red-950/60 border border-red-800 px-3 py-1 rounded">
+                <div className="flex items-center space-x-2 bg-red-50 border border-red-200 px-3 py-1 rounded">
                   <FaExclamationTriangle className="text-red-500 text-xs animate-pulse" />
-                  <span className="text-[10px] font-mono text-red-400 font-bold uppercase">SAFETY TRIP: {alarms[0] || "SYSTEM HALT"}</span>
+                  <span className="text-[10px] font-mono text-red-600 font-bold uppercase">SAFETY TRIP: {alarms[0] || "SYSTEM HALT"}</span>
                 </div>
               )}
             </div>
             
-            <div className="flex items-center space-x-4 text-xs font-mono">
-              <span className="text-gray-400">TANK_01 LEVEL: <strong className="text-white font-bold">{level.toFixed(1)}%</strong></span>
-              <span className="text-gray-400">TEMP: <strong className="text-white font-bold">{temperature.toFixed(1)}°C</strong></span>
+            <div className="flex items-center space-x-4 text-xs font-mono text-slate-600">
+              <span>TANK_01 LEVEL: <strong className="text-slate-800 font-bold">{level.toFixed(1)}%</strong></span>
+              <span>TEMP: <strong className="text-slate-800 font-bold">{temperature.toFixed(1)}°C</strong></span>
             </div>
           </div>
 
           {/* Panel 1: Physical Mimic (SVG Graphic) (lg:col-span-4) */}
-          <div className="lg:col-span-4 bg-[#07090e] border border-gray-800 rounded p-4 flex flex-col items-center relative min-h-[360px]">
-            <span className="absolute top-2 left-2 text-[9px] font-mono text-gray-500">[PROCESS_MIMIC]</span>
+          <div className="lg:col-span-4 bg-slate-50 border border-slate-200 rounded p-4 flex flex-col items-center relative min-h-[360px] shadow-sm">
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-slate-400">[PROCESS_MIMIC]</span>
             
             {/* Tank Animation Wrapper */}
             <div className="w-full flex-grow flex items-center justify-center pt-6">
               <svg width="220" height="280" viewBox="0 0 220 280" className="overflow-visible">
                 {/* 1. Pipe Incoming (top) */}
-                <path d="M 30,30 L 110,30 L 110,60" fill="none" stroke="#2a3547" strokeWidth="12" strokeLinecap="square" />
+                <path d="M 30,30 L 110,30 L 110,60" fill="none" stroke="#cbd5e1" strokeWidth="12" strokeLinecap="square" />
                 {systemActive && pumpSpeed > 0 && (
-                  <path d="M 30,30 L 110,30 L 110,60" fill="none" stroke="#00f2fe" strokeWidth="6" className="pipe-flow-active" />
+                  <path d="M 30,30 L 110,30 L 110,60" fill="none" stroke="#0284c7" strokeWidth="6" className="pipe-flow-active" />
                 )}
                 
                 {/* Inflow Valve Box */}
-                <rect x="94" y="20" width="32" height="20" rx="2" fill={pumpSpeed > 0 ? "#10b981" : "#ef4444"} stroke="#2a3547" strokeWidth="2" />
+                <rect x="94" y="20" width="32" height="20" rx="2" fill={pumpSpeed > 0 ? "#10b981" : "#ef4444"} stroke="#94a3b8" strokeWidth="2" />
                 <text x="110" y="33" fill="white" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
                   {pumpSpeed > 0 ? "ON" : "OFF"}
                 </text>
 
                 {/* 2. Tank Body Outline */}
-                <rect x="50" y="60" width="120" height="160" rx="8" fill="none" stroke="#475569" strokeWidth="4" />
+                <rect x="50" y="60" width="120" height="160" rx="8" fill="none" stroke="#64748b" strokeWidth="4" />
                 {/* Dotted Grid lines inside tank */}
-                <line x1="50" y1="100" x2="170" y2="100" stroke="#334155" strokeWidth="1" strokeDasharray="3,3" />
-                <line x1="50" y1="140" x2="170" y2="140" stroke="#334155" strokeWidth="1" strokeDasharray="3,3" />
-                <line x1="50" y1="180" x2="170" y2="180" stroke="#334155" strokeWidth="1" strokeDasharray="3,3" />
+                <line x1="50" y1="100" x2="170" y2="100" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3,3" />
+                <line x1="50" y1="140" x2="170" y2="140" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3,3" />
+                <line x1="50" y1="180" x2="170" y2="180" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3,3" />
                 
                 {/* Tank Liquid Fill */}
                 <rect 
@@ -314,61 +314,61 @@ const HmiSimulator = () => {
                 />
 
                 {/* 3. Heater Element (bottom of tank) */}
-                <path d="M 65,210 L 155,210" stroke={heaterOn && systemActive ? "#ef4444" : "#475569"} strokeWidth="6" strokeLinecap="round" className={heaterOn && systemActive ? "glow-red animate-pulse" : ""} />
+                <path d="M 65,210 L 155,210" stroke={heaterOn && systemActive ? "#ef4444" : "#64748b"} strokeWidth="6" strokeLinecap="round" className={heaterOn && systemActive ? "glow-red animate-pulse" : ""} />
                 
                 {/* 4. Pipe Outgoing (bottom right) */}
-                <path d="M 170,200 L 210,200 L 210,250" fill="none" stroke="#2a3547" strokeWidth="12" />
+                <path d="M 170,200 L 210,200 L 210,250" fill="none" stroke="#cbd5e1" strokeWidth="12" />
                 {drainOpen && (
-                  <path d="M 170,200 L 210,200 L 210,250" fill="none" stroke="#00f2fe" strokeWidth="6" className="pipe-flow-active" />
+                  <path d="M 170,200 L 210,200 L 210,250" fill="none" stroke="#0284c7" strokeWidth="6" className="pipe-flow-active" />
                 )}
                 
                 {/* Drain Valve Box */}
-                <rect x="180" y="190" width="30" height="20" rx="2" fill={drainOpen ? "#10b981" : "#ef4444"} stroke="#2a3547" strokeWidth="2" />
+                <rect x="180" y="190" width="30" height="20" rx="2" fill={drainOpen ? "#10b981" : "#ef4444"} stroke="#94a3b8" strokeWidth="2" />
                 <text x="195" y="203" fill="white" fontSize="8" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
                   {drainOpen ? "OPEN" : "CLSD"}
                 </text>
 
                 {/* Sensors overlay */}
                 {/* Level sensor top */}
-                <circle cx="110" cy="60" r="5" fill="#f59e0b" />
-                <line x1="110" y1="60" x2="110" y2={60 + (160 - (level / 100) * 160)} stroke="#f59e0b" strokeWidth="1" strokeDasharray="2,2" />
+                <circle cx="110" cy="60" r="5" fill="#d97706" />
+                <line x1="110" y1="60" x2="110" y2={60 + (160 - (level / 100) * 160)} stroke="#d97706" strokeWidth="1" strokeDasharray="2,2" />
                 
                 {/* Gradients Definition */}
                 <defs>
                   <linearGradient id="liquidGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#00f2fe" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#005a9e" stopOpacity="0.5" />
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#0284c7" stopOpacity="0.5" />
                   </linearGradient>
                 </defs>
               </svg>
             </div>
             
             {/* Process variables display */}
-            <div className="w-full grid grid-cols-2 gap-2 text-center font-mono text-[10px] border-t border-gray-800 pt-3 mt-2">
-              <div className="bg-[#0f131a] p-1.5 rounded">
-                <span className="text-gray-500 block">LEVEL PV</span>
-                <span className="text-[#10b981] font-bold text-xs">{level.toFixed(1)}%</span>
+            <div className="w-full grid grid-cols-2 gap-2 text-center font-mono text-[10px] border-t border-slate-200 pt-3 mt-2">
+              <div className="bg-white border border-slate-200 p-1.5 rounded shadow-sm">
+                <span className="text-slate-400 block font-bold">LEVEL PV</span>
+                <span className="text-emerald-600 font-bold text-xs">{level.toFixed(1)}%</span>
               </div>
-              <div className="bg-[#0f131a] p-1.5 rounded">
-                <span className="text-gray-500 block">SETPOINT SP</span>
-                <span className="text-[#00f2fe] font-bold text-xs">{setpoint.toFixed(1)}%</span>
+              <div className="bg-white border border-slate-200 p-1.5 rounded shadow-sm">
+                <span className="text-slate-400 block font-bold">SETPOINT SP</span>
+                <span className="text-[#0284c7] font-bold text-xs">{setpoint.toFixed(1)}%</span>
               </div>
             </div>
           </div>
 
           {/* Panel 2: Operator HMI Controls (lg:col-span-4) */}
-          <div className="lg:col-span-4 bg-[#07090e] border border-gray-800 rounded p-4 flex flex-col justify-between min-h-[360px] relative">
-            <span className="absolute top-2 left-2 text-[9px] font-mono text-gray-500">[OPERATOR_HMI_CONSOLE]</span>
+          <div className="lg:col-span-4 bg-slate-50 border border-slate-200 rounded p-4 flex flex-col justify-between min-h-[360px] relative shadow-sm">
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-slate-400">[OPERATOR_HMI_CONSOLE]</span>
 
             <div className="space-y-5 pt-6 flex-grow">
               {/* Start/Stop Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={handleStart}
-                  className={`flex items-center justify-center space-x-2 py-3 rounded font-mono text-xs font-bold transition duration-200 border ${
+                  className={`flex items-center justify-center space-x-2 py-3 rounded font-mono text-xs font-bold transition duration-200 border cursor-pointer ${
                     systemActive 
-                      ? "bg-emerald-950/60 border-emerald-500 text-emerald-400 shadow-glow-green" 
-                      : "bg-[#171d27] border-gray-700 hover:border-emerald-500 text-gray-300 hover:text-emerald-400"
+                      ? "bg-emerald-500 border-emerald-600 text-white shadow-sm" 
+                      : "bg-white border-slate-200 hover:border-emerald-500 text-slate-700 hover:text-emerald-600 shadow-sm"
                   }`}
                 >
                   <FaPlay className="text-[10px]" />
@@ -377,10 +377,10 @@ const HmiSimulator = () => {
                 
                 <button
                   onClick={handleStop}
-                  className={`flex items-center justify-center space-x-2 py-3 rounded font-mono text-xs font-bold transition duration-200 border ${
+                  className={`flex items-center justify-center space-x-2 py-3 rounded font-mono text-xs font-bold transition duration-200 border cursor-pointer ${
                     !systemActive && !safetyTrip
-                      ? "bg-red-950/60 border-red-500 text-red-400 shadow-glow-red"
-                      : "bg-[#171d27] border-gray-700 hover:border-red-500 text-gray-300 hover:text-red-400"
+                      ? "bg-red-500 border-red-600 text-white shadow-sm"
+                      : "bg-white border-slate-200 hover:border-red-500 text-slate-700 hover:text-red-600 shadow-sm"
                   }`}
                 >
                   <FaStop className="text-[10px]" />
@@ -389,18 +389,18 @@ const HmiSimulator = () => {
               </div>
 
               {/* Mode Selector */}
-              <div className="bg-[#0f131a] p-3 border border-gray-800 rounded">
-                <span className="text-[10px] font-mono text-gray-500 block mb-2">CONTROL_MODE</span>
-                <div className="grid grid-cols-2 gap-2 bg-[#07090e] p-1 rounded border border-gray-800 font-mono text-xs">
+              <div className="bg-white p-3 border border-slate-200 rounded shadow-sm">
+                <span className="text-[10px] font-mono text-slate-400 block mb-2 font-bold">CONTROL_MODE</span>
+                <div className="grid grid-cols-2 gap-2 bg-slate-50 p-1 rounded border border-slate-200 font-mono text-xs">
                   <button
                     onClick={() => { setMode("auto"); addLog("SYS", "Control mode switched to AUTO."); }}
-                    className={`py-1.5 rounded transition ${mode === "auto" ? "bg-[#00f2fe] text-black font-bold" : "text-gray-400 hover:text-white"}`}
+                    className={`py-1.5 rounded transition cursor-pointer ${mode === "auto" ? "bg-[#0284c7] text-white font-bold" : "text-slate-500 hover:text-slate-800"}`}
                   >
                     AUTO (PID)
                   </button>
                   <button
                     onClick={() => { setMode("manual"); addLog("SYS", "Control mode switched to MANUAL."); }}
-                    className={`py-1.5 rounded transition ${mode === "manual" ? "bg-[#00f2fe] text-black font-bold" : "text-gray-400 hover:text-white"}`}
+                    className={`py-1.5 rounded transition cursor-pointer ${mode === "manual" ? "bg-[#0284c7] text-white font-bold" : "text-slate-500 hover:text-slate-800"}`}
                   >
                     MANUAL
                   </button>
@@ -408,12 +408,12 @@ const HmiSimulator = () => {
               </div>
 
               {/* Setpoint (Auto) / Speed (Manual) Slider */}
-              <div className="bg-[#0f131a] p-3 border border-gray-800 rounded font-mono text-xs space-y-2">
+              <div className="bg-white p-3 border border-slate-200 rounded shadow-sm font-mono text-xs space-y-2">
                 {mode === "auto" ? (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">LEVEL SETPOINT (SP)</span>
-                      <span className="text-[#00f2fe] font-bold">{setpoint}%</span>
+                      <span className="text-slate-400 font-bold">LEVEL SETPOINT (SP)</span>
+                      <span className="text-[#0284c7] font-bold">{setpoint}%</span>
                     </div>
                     <input
                       type="range"
@@ -422,14 +422,14 @@ const HmiSimulator = () => {
                       value={setpoint}
                       onChange={(e) => setSetpoint(parseFloat(e.target.value))}
                       disabled={!systemActive}
-                      className="w-full accent-[#00f2fe] bg-gray-800 h-1.5 rounded-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="w-full accent-[#0284c7] bg-slate-200 h-1.5 rounded-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     />
                   </>
                 ) : (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">MANUAL PUMP SPEED</span>
-                      <span className="text-[#00f2fe] font-bold">{manualPumpSetting}%</span>
+                      <span className="text-slate-400 font-bold">MANUAL PUMP SPEED</span>
+                      <span className="text-[#0284c7] font-bold">{manualPumpSetting}%</span>
                     </div>
                     <input
                       type="range"
@@ -438,7 +438,7 @@ const HmiSimulator = () => {
                       value={manualPumpSetting}
                       onChange={(e) => setManualPumpSetting(parseFloat(e.target.value))}
                       disabled={!systemActive}
-                      className="w-full accent-[#00f2fe] bg-gray-800 h-1.5 rounded-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="w-full accent-[#0284c7] bg-slate-200 h-1.5 rounded-lg cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     />
                   </>
                 )}
@@ -453,15 +453,15 @@ const HmiSimulator = () => {
                     setDrainOpen(nextVal);
                     addLog("SYS", nextVal ? "Disturbance: Drain Valve OPENED." : "Disturbance: Drain Valve CLOSED.");
                   }}
-                  className={`p-2.5 rounded border transition text-left flex flex-col justify-between ${
+                  className={`p-2.5 rounded border transition text-left flex flex-col justify-between cursor-pointer ${
                     drainOpen
-                      ? "bg-amber-950/30 border-amber-500/70 text-amber-400 shadow-glow-amber"
-                      : "bg-[#0f131a] border-gray-800 text-gray-400 hover:text-white"
+                      ? "bg-amber-500 border-amber-600 text-white shadow-sm"
+                      : "bg-white border-slate-200 text-slate-500 hover:text-slate-800 shadow-sm"
                   }`}
                 >
-                  <span className="text-[9px] text-gray-500">DISTURBANCE</span>
+                  <span className="text-[9px] text-slate-400 font-bold">DISTURBANCE</span>
                   <span className="font-bold mt-1">DRAIN_VALVE</span>
-                  <span className="text-[9px] text-right mt-1 self-end bg-[#07090e] px-1 rounded">
+                  <span className="text-[9px] text-right mt-1 self-end bg-slate-100/50 text-slate-600 px-1 rounded">
                     {drainOpen ? "OPEN (DRAIN)" : "CLOSED"}
                   </span>
                 </button>
@@ -474,15 +474,15 @@ const HmiSimulator = () => {
                     addLog("SYS", nextVal ? "Process: HEATER ENERGIZED." : "Process: HEATER DE-ENERGIZED.");
                   }}
                   disabled={!systemActive}
-                  className={`p-2.5 rounded border transition text-left flex flex-col justify-between disabled:opacity-30 disabled:cursor-not-allowed ${
+                  className={`p-2.5 rounded border transition text-left flex flex-col justify-between cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
                     heaterOn && systemActive
-                      ? "bg-red-950/30 border-red-500/70 text-red-400 shadow-glow-red"
-                      : "bg-[#0f131a] border-gray-800 text-gray-400 hover:text-white"
+                      ? "bg-red-500 border-red-600 text-white shadow-sm"
+                      : "bg-white border-slate-200 text-slate-500 hover:text-slate-800 shadow-sm"
                   }`}
                 >
-                  <span className="text-[9px] text-gray-500">HEATING_ELEMENT</span>
+                  <span className="text-[9px] text-slate-400 font-bold">HEATING_ELEMENT</span>
                   <span className="font-bold mt-1">TANK_HEATER</span>
-                  <span className="text-[9px] text-right mt-1 self-end bg-[#07090e] px-1 rounded">
+                  <span className="text-[9px] text-right mt-1 self-end bg-slate-100/50 text-slate-600 px-1 rounded">
                     {heaterOn && systemActive ? "HEATING" : "OFF"}
                   </span>
                 </button>
@@ -493,9 +493,9 @@ const HmiSimulator = () => {
             {safetyTrip && (
               <button
                 onClick={resetSafetyTrip}
-                className="mt-4 flex items-center justify-center space-x-2 py-2 bg-red-950 border border-red-700 hover:bg-red-900 text-red-200 rounded font-mono text-xs font-bold transition"
+                className="mt-4 flex items-center justify-center space-x-2 py-2 bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 rounded font-mono text-xs font-bold transition cursor-pointer"
               >
-                <FaBell className="text-red-400" />
+                <FaBell className="text-red-500" />
                 <span>ACK_ALARM_RESET</span>
               </button>
             )}
@@ -504,11 +504,11 @@ const HmiSimulator = () => {
           {/* Panel 3: Live Trend & Alarm Historian (lg:col-span-4) */}
           <div className="lg:col-span-4 flex flex-col gap-4 min-h-[360px]">
             {/* Live Trend Graph */}
-            <div className="bg-[#07090e] border border-gray-800 rounded p-3 flex-grow flex flex-col justify-between relative">
-              <span className="text-[9px] font-mono text-gray-500 mb-1 block">[REAL_TIME_HISTORIAN_TREND]</span>
+            <div className="bg-slate-50 border border-slate-200 rounded p-3 flex-grow flex flex-col justify-between relative shadow-sm">
+              <span className="text-[9px] font-mono text-slate-400 mb-1 block font-bold">[REAL_TIME_HISTORIAN_TREND]</span>
               
               {/* Canvas container */}
-              <div className="w-full flex-grow relative bg-[#0b0f16] rounded border border-gray-900 overflow-hidden">
+              <div className="w-full flex-grow relative bg-white rounded border border-slate-200 overflow-hidden">
                 <canvas 
                   ref={canvasRef} 
                   width="360" 
@@ -518,13 +518,13 @@ const HmiSimulator = () => {
               </div>
 
               {/* Trend Legend */}
-              <div className="flex justify-between items-center text-[9px] font-mono text-gray-500 mt-2">
+              <div className="flex justify-between items-center text-[9px] font-mono text-slate-500 mt-2">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-0.5 bg-[#10b981] inline-block"></span>
                   <span>PV (LEVEL: {level.toFixed(0)}%)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-0.5 border-t border-dashed border-[#00f2fe] inline-block"></span>
+                  <span className="w-2.5 h-0.5 border-t border-dashed border-[#0284c7] inline-block"></span>
                   <span>SP (TARGET: {setpoint.toFixed(0)}%)</span>
                 </div>
                 <div>
@@ -534,26 +534,26 @@ const HmiSimulator = () => {
             </div>
 
             {/* Alarm & Audit Logs */}
-            <div className="bg-[#07090e] border border-gray-800 rounded p-3 h-[150px] flex flex-col justify-between relative overflow-hidden">
-              <span className="text-[9px] font-mono text-gray-500 mb-1.5 block">[SCADA_ALARM_EVENT_LOGGER]</span>
+            <div className="bg-slate-50 border border-slate-200 rounded p-3 h-[150px] flex flex-col justify-between relative overflow-hidden shadow-sm">
+              <span className="text-[9px] font-mono text-slate-400 mb-1.5 block font-bold">[SCADA_ALARM_EVENT_LOGGER]</span>
               
               <div className="flex-grow overflow-y-auto font-mono text-[10px] space-y-1.5 text-left pr-1 scrollbar-thin">
                 {logs.map((log) => {
-                  let badgeColor = "text-gray-500";
-                  let textColor = "text-gray-300";
+                  let badgeColor = "text-slate-400";
+                  let textColor = "text-slate-600";
                   if (log.type === "ALM") {
-                    badgeColor = "text-red-500 font-bold animate-pulse";
-                    textColor = "text-red-400 bg-red-950/20 px-1 rounded";
+                    badgeColor = "text-red-600 font-bold animate-pulse";
+                    textColor = "text-red-600 bg-red-50 border border-red-100 px-1 rounded";
                   } else if (log.type === "WARN") {
-                    badgeColor = "text-amber-500 font-bold";
-                    textColor = "text-amber-400";
+                    badgeColor = "text-amber-600 font-bold";
+                    textColor = "text-amber-700 bg-amber-50 border border-amber-100 px-1 rounded";
                   } else if (log.type === "SYS") {
-                    badgeColor = "text-[#00f2fe]";
+                    badgeColor = "text-[#0284c7]";
                   }
 
                   return (
                     <div key={log.id} className="flex items-start gap-1.5 leading-4">
-                      <span className="text-gray-600">[{log.time}]</span>
+                      <span className="text-slate-400">[{log.time}]</span>
                       <span className={`${badgeColor}`}>[{log.type}]</span>
                       <span className={`${textColor} flex-grow`}>{log.message}</span>
                     </div>
@@ -564,31 +564,31 @@ const HmiSimulator = () => {
           </div>
 
           {/* Bottom Panel: PLC Code View (Ladder Logic vs Structured Text) (col-span-12) */}
-          <div className="col-span-12 bg-[#07090e] border border-gray-800 rounded p-4 relative overflow-hidden">
+          <div className="col-span-12 bg-slate-50 border border-slate-200 rounded p-4 relative overflow-hidden shadow-sm">
             {/* Header controls for Code View */}
-            <div className="flex justify-between items-center border-b border-gray-800 pb-2.5 mb-4">
+            <div className="flex justify-between items-center border-b border-slate-200 pb-2.5 mb-4">
               <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider font-bold">PLC Code Visualizer:</span>
-                <span className="text-[9px] font-mono text-emerald-400 bg-[#10b981]/10 px-2 py-0.5 rounded border border-[#10b981]/30">ONLINE_DEBUG</span>
+                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">PLC Code Visualizer:</span>
+                <span className="text-[9px] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">ONLINE_DEBUG</span>
               </div>
               
               <div className="flex space-x-2 font-mono text-[10px]">
                 <button
                   onClick={() => setViewType("ladder")}
-                  className={`px-3 py-1 rounded transition border ${
+                  className={`px-3 py-1 rounded transition border cursor-pointer ${
                     viewType === "ladder" 
-                      ? "bg-[#00f2fe]/10 border-[#00f2fe] text-[#00f2fe] font-bold" 
-                      : "bg-[#0f131a] border-gray-800 text-gray-400 hover:text-white"
+                      ? "bg-[#0284c7]/10 border-[#0284c7] text-[#0284c7] font-bold" 
+                      : "bg-white border-slate-200 text-slate-500 hover:text-slate-800"
                   }`}
                 >
                   LADDER_LOGIC (LD)
                 </button>
                 <button
                   onClick={() => setViewType("st")}
-                  className={`px-3 py-1 rounded transition border ${
+                  className={`px-3 py-1 rounded transition border cursor-pointer ${
                     viewType === "st" 
-                      ? "bg-[#00f2fe]/10 border-[#00f2fe] text-[#00f2fe] font-bold" 
-                      : "bg-[#0f131a] border-gray-800 text-gray-400 hover:text-white"
+                      ? "bg-[#0284c7]/10 border-[#0284c7] text-[#0284c7] font-bold" 
+                      : "bg-white border-slate-200 text-slate-500 hover:text-slate-800"
                   }`}
                 >
                   STRUCTURED_TEXT (ST)
@@ -598,7 +598,7 @@ const HmiSimulator = () => {
 
             {/* LADDER VIEW */}
             {viewType === "ladder" && (
-              <div className="p-4 bg-[#0a0d13] rounded border border-gray-900 font-mono text-xs overflow-x-auto space-y-6 text-left">
+              <div className="p-4 bg-[#0b0f16] rounded border border-slate-800 font-mono text-xs overflow-x-auto space-y-6 text-left">
                 {/* RUNG 1: System Run Coil */}
                 <div className="flex items-center min-w-[500px]">
                   {/* Left Rail */}
@@ -708,18 +708,20 @@ const HmiSimulator = () => {
                   <div className="w-1.5 h-12 bg-gray-500" />
                 </div>
               </div>
-            )}            {/* STRUCTURED TEXT VIEW */}
+            )}
+
+            {/* STRUCTURED TEXT VIEW */}
             {viewType === "st" && (
-              <div className="p-4 bg-[#0a0d13] rounded border border-gray-900 font-mono text-[11px] overflow-x-auto text-left space-y-1 select-none">
-                <span className="text-[9px] text-gray-500 block mb-2 font-mono">{"// IEC 61131-3 Structured Text - Main Program Cyclic execution"}</span>
+              <div className="p-4 bg-[#0b0f16] rounded border border-slate-800 font-mono text-[11px] overflow-x-auto text-left space-y-1 select-none">
+                <span className="text-[9px] text-slate-500 block mb-2 font-mono">{"// IEC 61131-3 Structured Text - Main Program Cyclic execution"}</span>
                 
                 <div><span className="text-purple-400">PROGRAM</span> MainControl</div>
                 <div><span className="text-purple-400">VAR</span></div>
-                <div className="pl-4 text-gray-400">Start_PB, Stop_PB : <span className="text-[#00f2fe]">BOOL</span>; <span className="text-gray-600">{"// Pushbuttons"}</span></div>
-                <div className="pl-4 text-gray-400">Sys_Active_Coil : <span className="text-[#00f2fe]">BOOL</span>; <span className="text-gray-600">{"// Run contact"}</span></div>
-                <div className="pl-4 text-gray-400">Level_PV, Setpoint_SP : <span className="text-[#00f2fe]">REAL</span>; <span className="text-gray-600">{"// Process parameters"}</span></div>
-                <div className="pl-4 text-gray-400">Pump_CV : <span className="text-[#00f2fe]">REAL</span>; <span className="text-gray-600">{"// Controlled Variable speed"}</span></div>
-                <div className="pl-4 text-gray-400">Safety_Trip : <span className="text-[#00f2fe]">BOOL</span>; <span className="text-gray-600">{"// Trip coil"}</span></div>
+                <div className="pl-4 text-gray-400">Start_PB, Stop_PB : <span className="text-[#38bdf8]">BOOL</span>; <span className="text-gray-600">{"// Pushbuttons"}</span></div>
+                <div className="pl-4 text-gray-400">Sys_Active_Coil : <span className="text-[#38bdf8]">BOOL</span>; <span className="text-gray-600">{"// Run contact"}</span></div>
+                <div className="pl-4 text-gray-400">Level_PV, Setpoint_SP : <span className="text-[#38bdf8]">REAL</span>; <span className="text-gray-600">{"// Process parameters"}</span></div>
+                <div className="pl-4 text-gray-400">Pump_CV : <span className="text-[#38bdf8]">REAL</span>; <span className="text-gray-600">{"// Controlled Variable speed"}</span></div>
+                <div className="pl-4 text-gray-400">Safety_Trip : <span className="text-[#38bdf8]">BOOL</span>; <span className="text-gray-600">{"// Trip coil"}</span></div>
                 <div><span className="text-purple-400">END_VAR</span></div>
                 
                 <div className="pt-2 text-gray-500">{"// 1. Master Start/Stop Latch with Safety Interlock"}</div>

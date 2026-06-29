@@ -4,20 +4,21 @@
 
 @layer base {
   :root {
-    --bg-primary: #07090e;
-    --bg-secondary: #0f131a;
-    --bg-tertiary: #171d27;
-    --color-cyan: #00f2fe;
-    --color-cyan-glow: rgba(0, 242, 254, 0.4);
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --bg-dark-terminal: #0b0f16;
+    --color-cyan: #0284c7;
+    --color-cyan-glow: rgba(2, 132, 199, 0.15);
     --color-green: #10b981;
-    --color-green-glow: rgba(16, 185, 129, 0.4);
+    --color-green-glow: rgba(16, 185, 129, 0.15);
     --color-amber: #f59e0b;
-    --color-amber-glow: rgba(245, 158, 11, 0.4);
+    --color-amber-glow: rgba(245, 158, 11, 0.15);
     --color-red: #ef4444;
-    --color-red-glow: rgba(239, 68, 68, 0.4);
-    --color-text: #f3f4f6;
-    --color-text-muted: #9ca3af;
-    --grid-color: rgba(0, 242, 254, 0.03);
+    --color-red-glow: rgba(239, 68, 68, 0.15);
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --grid-color: rgba(2, 132, 199, 0.035);
   }
 
   body {
@@ -28,75 +29,75 @@
   }
 }
 
-/* Custom Industrial UI Utilities */
+/* Custom Industrial UI Utilities (Steel & Slate) */
 .scada-grid {
   background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
                     linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-size: 20px 20px;
 }
 
 .scada-panel {
   background-color: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .scada-border-cyan {
-  border-color: rgba(0, 242, 254, 0.2);
+  border-color: rgba(2, 132, 199, 0.2);
 }
 
 .scada-border-cyan:hover {
   border-color: var(--color-cyan);
-  box-shadow: 0 0 10px var(--color-cyan-glow);
+  box-shadow: 0 4px 12px var(--color-cyan-glow);
 }
 
-/* Glow effects */
+/* Glow effects (toned down for light mode) */
 .glow-cyan {
-  text-shadow: 0 0 8px var(--color-cyan-glow);
+  text-shadow: 0 0 4px var(--color-cyan-glow);
 }
 
 .glow-green {
-  text-shadow: 0 0 8px var(--color-green-glow);
+  text-shadow: 0 0 4px var(--color-green-glow);
 }
 
 .glow-amber {
-  text-shadow: 0 0 8px var(--color-amber-glow);
+  text-shadow: 0 0 4px var(--color-amber-glow);
 }
 
 .glow-red {
-  text-shadow: 0 0 8px var(--color-red-glow);
+  text-shadow: 0 0 4px var(--color-red-glow);
 }
 
 .shadow-glow-cyan {
-  box-shadow: 0 0 15px var(--color-cyan-glow);
+  box-shadow: 0 0 8px var(--color-cyan-glow);
 }
 
 .shadow-glow-green {
-  box-shadow: 0 0 15px var(--color-green-glow);
+  box-shadow: 0 0 8px var(--color-green-glow);
 }
 
 .shadow-glow-amber {
-  box-shadow: 0 0 15px var(--color-amber-glow);
+  box-shadow: 0 0 8px var(--color-amber-glow);
 }
 
 .shadow-glow-red {
-  box-shadow: 0 0 15px var(--color-red-glow);
+  box-shadow: 0 0 8px var(--color-red-glow);
 }
 
 /* LED Indicator animations */
 @keyframes blink-green {
-  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-green-glow); }
-  50% { opacity: 0.4; box-shadow: 0 0 2px var(--color-green-glow); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--color-green-glow); }
+  50% { opacity: 0.5; box-shadow: 0 0 1px var(--color-green-glow); }
 }
 
 @keyframes blink-red {
-  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--color-red-glow); }
-  50% { opacity: 0.3; box-shadow: 0 0 2px var(--color-red-glow); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-red-glow); }
+  50% { opacity: 0.4; box-shadow: 0 0 1px var(--color-red-glow); }
 }
 
 @keyframes blink-amber {
-  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-amber-glow); }
-  50% { opacity: 0.4; box-shadow: 0 0 2px var(--color-amber-glow); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--color-amber-glow); }
+  50% { opacity: 0.5; box-shadow: 0 0 1px var(--color-amber-glow); }
 }
 
 .led-blink-green {
@@ -111,15 +112,15 @@
   animation: blink-amber 1.2s infinite;
 }
 
-/* Pipe Fluid Animation */
+/* Pipe Fluid Animation (clean steel blue flow) */
 @keyframes fluid-flow {
   0% { stroke-dashoffset: 24; }
   100% { stroke-dashoffset: 0; }
 }
 
 .pipe-flow-active {
-  stroke-dasharray: 8, 4;
-  animation: fluid-flow 1s linear infinite;
+  stroke-dasharray: 6, 3;
+  animation: fluid-flow 0.8s linear infinite;
 }
 
 /* Custom Scrollbar */
@@ -129,11 +130,11 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-tertiary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
+  background: #cbd5e1;
   border-radius: 3px;
 }
 
